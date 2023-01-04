@@ -5,8 +5,7 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*",
-        "neopixel": "github:microsoft/pxt-neopixel"
+        "microphone": "*"
     },
     "files": [
         "README.md",
