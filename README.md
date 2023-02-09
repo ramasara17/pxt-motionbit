@@ -1,31 +1,85 @@
+# MOTION:BIT Extension for Microsoft MakeCode
 
-> Open this page at [https://waiweng83.github.io/pxt-motionbit/](https://waiweng83.github.io/pxt-motionbit/)
+This code provides the driver for [**MOTION:BIT** - Simplifying motion control with micro:bit](https://www.cytron.io/p-motionbit).
 
-## Use as Extension
+**MOTION:BIT** aims at simplifying robots & motion control projects making with micro:bit. With the built-in 4-channel DC motor driver, 8x servo control onboard Li-Ion batttery or external power input terminal, students can build projects with mechanical movements right away. The GPIO breakout ports with LED status indicators on all its IO pins enable additional sensors and modules to be applied to any projects conveniently. MOTION:BIT works with **micro:bit V1 & V2**.
 
-This repository can be added as an **extension** in MakeCode.
+Read more about MOTION:BIT here: https://www.cytron.io/p-motionbit
 
+![MOTION:BIT](https://raw.githubusercontent.com/CytronTechnologies/pxt-motionbit/master/icon.png)
+
+## Adding the Extension in MakeCode Editor  
 * open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/waiweng83/pxt-motionbit** and import
+* click on **New Project** and give your project a meaningful name
+* click on **Extensions** under the gearwheel :gear: menu
+* search for '**motionbit**' or "**https://github.com/cytrontechnologies/pxt-motionbit**" 
+* click on the motionbit card to install the extension
 
-## Edit this project ![Build status badge](https://github.com/waiweng83/pxt-motionbit/workflows/MakeCode/badge.svg)
+## Examples
+### DC Motors
 
-To edit this repository in MakeCode.
+Run Motor 1 forward at 50% speed when button A is pressed, brake the motor when button B is pressed.
 
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/waiweng83/pxt-motionbit** and click import
+```blocks
+input.onButtonPressed(Button.A, function () {
+    motionbit.runMotor(MotorChannel.M1, MotorDirection.Forward, 127)
+})
+input.onButtonPressed(Button.B, function () {
+    motionbit.brakeMotor(MotorChannel.M1)
+})
+```
 
-## Blocks preview
+### Servos
 
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
+Button A pressed - Rotate Servo 1 to 0 degree.
+Button B pressed - Rotate Servo 1 to 180 degree.
+Button A+B pressed - Disable Servo 1. No pulse is sent to Servo 1 and it can be rotated by hand.
 
-![A rendered view of the blocks](https://github.com/waiweng83/pxt-motionbit/raw/master/.github/makecode/blocks.png)
+```blocks
+input.onButtonPressed(Button.A, function () {
+    motionbit.setServoPosition(ServoChannel.S1, 0)
+})
+input.onButtonPressed(Button.B, function () {
+    motionbit.setServoPosition(ServoChannel.S1, 180)
+})
+input.onButtonPressed(Button.AB, function () {
+    motionbit.disableServo(ServoChannel.S1)
+})
+```
 
-#### Metadata (used for search, rendering)
+### RGB LEDs
 
-* for PXT/microbit
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+Clear all RGB pixels.
+
+```blocks
+motionbit.clearAllRgbPixels()
+```
+
+Change the RGB pixels brightness to maximum.
+
+```blocks
+motionbit.setRgbBrightness(255)
+```
+
+Show color green on all RGB pixels and change the color one by one to red.
+
+```blocks
+motionbit.setAllRgbPixelsColor(0x00ff00)
+basic.pause(1000)
+motionbit.setRgbPixelColor(0, 0xff0000)
+basic.pause(500)
+motionbit.setRgbPixelColor(1, 0xff0000)
+```
+  
+## License  
+MIT  
+  
+## Supported targets  
+* for PXT/microbit  
+  
+  
+  
+> Open this page at [https://cytrontechnologies.github.io/pxt-motionbit/](https://cytrontechnologies.github.io/pxt-motionbit/)  
+  
+  
+<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>  
