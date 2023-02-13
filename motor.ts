@@ -20,7 +20,7 @@ const REG_ADD_PRESCALE = 0xFE;
 
 // Motor channel.
 // The value equals to the output channel of PCA9685 (For MA).
-enum MotorChannel {
+enum MotionBitMotorChannel {
     M1 = 4,
     M2 = 6,
     M3 = 10,
@@ -31,7 +31,7 @@ enum MotorChannel {
 };
 
 // Motor direction.
-enum MotorDirection {
+enum MotionBitMotorDirection {
     //% block="forward"
     Forward = 0,
 
@@ -41,7 +41,7 @@ enum MotorDirection {
 
 // Servo Channel.
 // The value equals to the output channel of PCA9685.
-enum ServoChannel {
+enum MotionBitServoChannel {
     S1 = 0,
     S2 = 1,
     S3 = 2,
@@ -70,23 +70,23 @@ namespace motionbit {
 
     /**
      * Brake the motor
-     * @param motor Motor channel. eg: Motor.M1, Motor.M2
+     * @param motor Motor channel.
      */
     //% group="DC Motors"
     //% weight=20
     //% blockGap=8
     //% blockId=motionbit_brake_motor
     //% block="brake motor %motor"
-    export function brakeMotor(motor: MotorChannel): void {
-        if (motor == MotorChannel.All) {
-            setPWM(MotorChannel.M1, 0);
-            setPWM(MotorChannel.M1 + 1, 0);
-            setPWM(MotorChannel.M2, 0);
-            setPWM(MotorChannel.M2 + 1, 0);
-            setPWM(MotorChannel.M3, 0);
-            setPWM(MotorChannel.M3 + 1, 0);
-            setPWM(MotorChannel.M4, 0);
-            setPWM(MotorChannel.M4 + 1, 0);
+    export function brakeMotor(motor: MotionBitMotorChannel): void {
+        if (motor == MotionBitMotorChannel.All) {
+            setPWM(MotionBitMotorChannel.M1, 0);
+            setPWM(MotionBitMotorChannel.M1 + 1, 0);
+            setPWM(MotionBitMotorChannel.M2, 0);
+            setPWM(MotionBitMotorChannel.M2 + 1, 0);
+            setPWM(MotionBitMotorChannel.M3, 0);
+            setPWM(MotionBitMotorChannel.M3 + 1, 0);
+            setPWM(MotionBitMotorChannel.M4, 0);
+            setPWM(MotionBitMotorChannel.M4 + 1, 0);
         } else {
             setPWM(motor, 0);
             setPWM(motor + 1, 0);
@@ -106,35 +106,35 @@ namespace motionbit {
     //% blockId=motionbit_run_motor
     //% block="run motor %motor %direction at speed %speed"
     //% speed.min=0 speed.max=255
-    export function runMotor(motor: MotorChannel, direction: MotorDirection, speed: number): void {
+    export function runMotor(motor: MotionBitMotorChannel, direction: MotionBitMotorDirection, speed: number): void {
         speed = Math.constrain(speed, 0, 255);
         speed = Math.map(speed, 0, 255, 0, 4095);
 
-        if (direction == MotorDirection.Forward) {
-            if (motor == MotorChannel.All) {
-                setPWM(MotorChannel.M1, speed);
-                setPWM(MotorChannel.M1 + 1, 0);
-                setPWM(MotorChannel.M2, speed);
-                setPWM(MotorChannel.M2 + 1, 0);
-                setPWM(MotorChannel.M3, speed);
-                setPWM(MotorChannel.M3 + 1, 0);
-                setPWM(MotorChannel.M4, speed);
-                setPWM(MotorChannel.M4 + 1, 0);
+        if (direction == MotionBitMotorDirection.Forward) {
+            if (motor == MotionBitMotorChannel.All) {
+                setPWM(MotionBitMotorChannel.M1, speed);
+                setPWM(MotionBitMotorChannel.M1 + 1, 0);
+                setPWM(MotionBitMotorChannel.M2, speed);
+                setPWM(MotionBitMotorChannel.M2 + 1, 0);
+                setPWM(MotionBitMotorChannel.M3, speed);
+                setPWM(MotionBitMotorChannel.M3 + 1, 0);
+                setPWM(MotionBitMotorChannel.M4, speed);
+                setPWM(MotionBitMotorChannel.M4 + 1, 0);
             } else {
                 setPWM(motor, speed);
                 setPWM(motor + 1, 0);
             }
         }
         else{
-            if (motor == MotorChannel.All) {
-                setPWM(MotorChannel.M1, 0);
-                setPWM(MotorChannel.M1 + 1, speed);
-                setPWM(MotorChannel.M2, 0);
-                setPWM(MotorChannel.M2 + 1, speed);
-                setPWM(MotorChannel.M3, 0);
-                setPWM(MotorChannel.M3 + 1, speed);
-                setPWM(MotorChannel.M4, 0);
-                setPWM(MotorChannel.M4 + 1, speed);
+            if (motor == MotionBitMotorChannel.All) {
+                setPWM(MotionBitMotorChannel.M1, 0);
+                setPWM(MotionBitMotorChannel.M1 + 1, speed);
+                setPWM(MotionBitMotorChannel.M2, 0);
+                setPWM(MotionBitMotorChannel.M2 + 1, speed);
+                setPWM(MotionBitMotorChannel.M3, 0);
+                setPWM(MotionBitMotorChannel.M3 + 1, speed);
+                setPWM(MotionBitMotorChannel.M4, 0);
+                setPWM(MotionBitMotorChannel.M4 + 1, speed);
             } else {
                 setPWM(motor, 0);
                 setPWM(motor + 1, speed);
@@ -152,16 +152,16 @@ namespace motionbit {
     //% blockGap=8
     //% blockId=motionbit_disable_servo
     //% block="disable servo %servo"
-    export function disableServo(servo: ServoChannel): void {
-        if (servo == ServoChannel.All) {
-            setServoPulseWidth(ServoChannel.S1, 0);
-            setServoPulseWidth(ServoChannel.S2, 0);
-            setServoPulseWidth(ServoChannel.S3, 0);
-            setServoPulseWidth(ServoChannel.S4, 0);
-            setServoPulseWidth(ServoChannel.S5, 0);
-            setServoPulseWidth(ServoChannel.S6, 0);
-            setServoPulseWidth(ServoChannel.S7, 0);
-            setServoPulseWidth(ServoChannel.S8, 0);
+    export function disableServo(servo: MotionBitServoChannel): void {
+        if (servo == MotionBitServoChannel.All) {
+            setServoPulseWidth(MotionBitServoChannel.S1, 0);
+            setServoPulseWidth(MotionBitServoChannel.S2, 0);
+            setServoPulseWidth(MotionBitServoChannel.S3, 0);
+            setServoPulseWidth(MotionBitServoChannel.S4, 0);
+            setServoPulseWidth(MotionBitServoChannel.S5, 0);
+            setServoPulseWidth(MotionBitServoChannel.S6, 0);
+            setServoPulseWidth(MotionBitServoChannel.S7, 0);
+            setServoPulseWidth(MotionBitServoChannel.S8, 0);
         }
         else {
             setServoPulseWidth(servo, 0);
@@ -180,18 +180,18 @@ namespace motionbit {
     //% blockId=motionbit_set_servo_position
     //% block="set servo %servo position to %position degrees"
     //% position.min=0 position.max=180
-    export function setServoPosition(servo: ServoChannel, position: number): void {
+    export function setServoPosition(servo: MotionBitServoChannel, position: number): void {
         position = Math.constrain(position, 0, 180);
         let pulseWidth = position * 2000 / 180 + 500;
-        if (servo == ServoChannel.All) {
-            setServoPulseWidth(ServoChannel.S1, pulseWidth);
-            setServoPulseWidth(ServoChannel.S2, pulseWidth);
-            setServoPulseWidth(ServoChannel.S3, pulseWidth);
-            setServoPulseWidth(ServoChannel.S4, pulseWidth);
-            setServoPulseWidth(ServoChannel.S5, pulseWidth);
-            setServoPulseWidth(ServoChannel.S6, pulseWidth);
-            setServoPulseWidth(ServoChannel.S7, pulseWidth);
-            setServoPulseWidth(ServoChannel.S8, pulseWidth);
+        if (servo == MotionBitServoChannel.All) {
+            setServoPulseWidth(MotionBitServoChannel.S1, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S2, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S3, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S4, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S5, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S6, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S7, pulseWidth);
+            setServoPulseWidth(MotionBitServoChannel.S8, pulseWidth);
         }
         else {
             setServoPulseWidth(servo, pulseWidth);

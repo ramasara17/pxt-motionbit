@@ -1,7 +1,8 @@
 {
     "name": "pxt-motionbit",
     "version": "1.0.2",
-    "description": "",
+    "description": "MakeCode Package for Cytron MOTION:BIT",
+    "license": "MIT",
     "dependencies": {
         "core": "*"
     },
@@ -17,6 +18,7 @@
     "testFiles": [
         "test.ts"
     ],
+    "public": true,
     "targetVersions": {
         "target": "5.0.12",
         "targetId": "microbit"

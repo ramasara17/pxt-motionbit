@@ -12,30 +12,6 @@ const RGB_LED_PIN = DigitalPin.P8;
 // Number of RGB LED.
 const RGB_LED_LENGTH = 2;
 
-// RGB Colors
-enum RgbColors {
-    //% block=red
-    Red = 0xFF0000,
-    //% block=orange
-    Orange = 0xFFA500,
-    //% block=yellow
-    Yellow = 0xFFFF00,
-    //% block=green
-    Green = 0x00FF00,
-    //% block=blue
-    Blue = 0x0000FF,
-    //% block=indigo
-    Indigo = 0x4b0082,
-    //% block=violet
-    Violet = 0x8a2be2,
-    //% block=purple
-    Purple = 0xFF00FF,
-    //% block=white
-    White = 0xFFFFFF,
-    //% block=black
-    Black = 0x000000
-}
-
 
 
 namespace motionbit {
@@ -97,7 +73,7 @@ namespace motionbit {
 
     /**
      * Show the same color on all RGB pixels. 
-     * @param color RGB color of the pixel.
+     * @param color RGB color of the pixel. eg: 0xff0000
      */
     //% group="RGB LED"
     //% weight=14
@@ -117,7 +93,7 @@ namespace motionbit {
     /**
      * Show color on individual RGB pixel.
      * @param pixel The pixel number we want to change the color.
-     * @param color RGB color of the pixel.
+     * @param color RGB color of the pixel. eg: 0xff0000
      */
     //% group="RGB LED"
     //% weight=13
@@ -143,8 +119,8 @@ namespace motionbit {
     //% blockGap=8
     //% blockId="motionbit_colors"
     //% block="%color"
-    export function colors(color: RgbColors): number {
-        return <number>color;
+    export function colors(color: NeoPixelColors): number {
+        return neopixel.colors(color);
     }
 
 
@@ -168,7 +144,7 @@ namespace motionbit {
         green = Math.constrain(green, 0, 255);
         blue = Math.constrain(blue, 0, 255);
 
-        return ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
+        return neopixel.rgb(red, green, blue);
     }
 
 }
