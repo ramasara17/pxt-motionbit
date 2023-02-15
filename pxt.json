@@ -1,7 +1,7 @@
 {
     "name": "pxt-motionbit",
     "version": "1.0.3",
-    "description": "MakeCode Package for Cytron MOTION:BIT",
+    "description": "MakeCode Extension for Cytron MOTION:BIT",
     "license": "MIT",
     "dependencies": {
         "core": "*"
