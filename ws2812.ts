@@ -23,7 +23,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
  */
 
 namespace motionbit {
-    //% shim=sendBufferAsm
+    //% shim=motionbitSendBuffer
     export function ws2812bSendBuffer(buf: Buffer, pin: DigitalPin) {
+        return
     }
 }

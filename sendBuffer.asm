@@ -17,8 +17,11 @@
 ; OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+; This file was modified from the official ws2812b extension.
 
-sendBufferAsm:
+
+
+motionbitSendBuffer:
 
     push {r4,r5,r6,r7,lr}
     
@@ -83,5 +86,3 @@ sendBufferAsm:
     cpsie i            ; enable irq
 
     pop {r4,r5,r6,r7,pc}
-
-
