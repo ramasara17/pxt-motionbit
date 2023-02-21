@@ -22,10 +22,10 @@ Run Motor 1 forward at 50% speed when button A is pressed, brake the motor when 
 
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    motionbit.runMotor(MotorChannel.M1, MotorDirection.Forward, 127)
+    motionbit.runMotor(MotionBitMotorChannel.M1, MotionBitMotorDirection.Forward, 127)
 })
 input.onButtonPressed(Button.B, function () {
-    motionbit.brakeMotor(MotorChannel.M1)
+    motionbit.brakeMotor(MotionBitMotorChannel.M1)
 })
 ```
 
@@ -37,13 +37,13 @@ Button A+B pressed - Disable Servo 1. No pulse is sent to Servo 1 and it can be 
 
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    motionbit.setServoPosition(ServoChannel.S1, 0)
+    motionbit.setServoPosition(MotionBitServoChannel.S1, 0)
 })
 input.onButtonPressed(Button.B, function () {
-    motionbit.setServoPosition(ServoChannel.S1, 180)
+    motionbit.setServoPosition(MotionBitServoChannel.S1, 180)
 })
 input.onButtonPressed(Button.AB, function () {
-    motionbit.disableServo(ServoChannel.S1)
+    motionbit.disableServo(MotionBitServoChannel.S1)
 })
 ```
 
