@@ -69,8 +69,8 @@ motionbit.setAllRgbPixelsColor(motionbit.rgb(255, 0, 0))
 basic.pause(1000)
 
 // Show different color on each RGB pixels.
-motionbit.setRgbPixelColor(0, motionbit.colors(NeoPixelColors.Red))
-motionbit.setRgbPixelColor(1, motionbit.colors(NeoPixelColors.Blue))
+motionbit.setRgbPixelColor(0, motionbit.colors(MotionBitRgbColors.Red))
+motionbit.setRgbPixelColor(1, motionbit.colors(MotionBitRgbColors.Blue))
 basic.pause(1000)
 
 // Change the brightness to 100% and show rainbow color.

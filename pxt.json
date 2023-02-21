@@ -12,8 +12,7 @@
         "rgb.ts",
         "neopixel.ts",
         "ws2812.ts",
-        "sendBuffer.asm",
-        "setBufferMode.asm"
+        "sendBuffer.asm"
     ],
     "testFiles": [
         "test.ts"

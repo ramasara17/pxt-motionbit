@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Functions for MOTION:BIT - RGB LED.
+ * These are the wrapper functions for the neopixel functions in neopixel.ts
  *
  * Company: Cytron Technologies Sdn Bhd
  * Website: http://www.cytron.io
@@ -22,7 +23,7 @@ namespace motionbit {
     }
 
     // Create a Neo Pixel object for RGB LED.
-    let rgbLed = neopixel.create(RGB_LED_PIN, RGB_LED_LENGTH, NeoPixelMode.RGB);
+    let rgbLed = motionbit.create(RGB_LED_PIN, RGB_LED_LENGTH, MotionBitRgbMode.RGB);
     rgbLed.clear();
 
     // Reduce the default brightness.
@@ -119,8 +120,8 @@ namespace motionbit {
     //% blockGap=8
     //% blockId="motionbit_colors"
     //% block="%color"
-    export function colors(color: NeoPixelColors): number {
-        return neopixel.colors(color);
+    export function colors(color: MotionBitRgbColors): number {
+        return color;
     }
 
 
@@ -139,12 +140,7 @@ namespace motionbit {
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
     export function rgb(red: number, green: number, blue: number): number {
-        // Limit the value.
-        red = Math.constrain(red, 0, 255);
-        green = Math.constrain(green, 0, 255);
-        blue = Math.constrain(blue, 0, 255);
-
-        return neopixel.rgb(red, green, blue);
+        return ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
     }
 
 }
