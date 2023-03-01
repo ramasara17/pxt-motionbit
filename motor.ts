@@ -63,8 +63,14 @@ enum MotionBitServoChannel {
 //% weight=10 color=#ff8000 icon="\uf085" block="MOTION:BIT"
 //% groups=['DC Motors', 'Servos', 'RGB LED']
 namespace motionbit {
+    // Flag to indicate whether the PCA9685 has been initialized.
+    let initialized = false;
+
+    // PWM frequency.
+    let pwmFreq = 50;
+
     // Initialize the PCA9685 with frequency 50Hz.
-    initPCA9685(50);
+    initialized = initPCA9685(pwmFreq);
 
 
 
@@ -231,9 +237,16 @@ namespace motionbit {
 
     /**
      * Initialize and reset the output of PCA9685.
+     * Return true if able to communicate with the PCA9685.
      * @param freq PWM frequency.
      */
-    function initPCA9685(freq: number): void {
+    function initPCA9685(freq: number): boolean {
+        // Try to read from the PCA9685.
+        // Return false if failed.
+        if (pins.i2cReadNumber(PCA9685_I2C_ADDRESS, NumberFormat.Int8LE) == 0) {
+            return false;
+        }
+
         // Enable Register Auto-Increment and go to sleep.
         i2cWrite(REG_ADD_MODE1, 0x30);
 
@@ -253,6 +266,8 @@ namespace motionbit {
 
         // Restart.
         i2cWrite(REG_ADD_MODE1, 0xA0);
+
+        return true;
     }
 
 
@@ -266,6 +281,16 @@ namespace motionbit {
         // Make sure the channel is valid.
         if (channel < 0 || channel > 15) {
             return;
+        }
+
+        // Make sure the PCA9685 was initialized.
+        if (initialized == false) {
+            initialized = initPCA9685(pwmFreq);
+
+            // Still failed.
+            if (initialized == false) {
+                return;
+            }
         }
 
         let regAdd = REG_ADD_LED0_ON_L + (channel * 4);
@@ -297,6 +322,16 @@ namespace motionbit {
      * @param pulseWidth Servo pulse width (0 or 500 - 2500us).
      */
     function setServoPulseWidth(channel: number, pulseWidth: number): void {
+        // Make sure the PCA9685 was initialized.
+        if (initialized == false) {
+            initialized = initPCA9685(pwmFreq);
+
+            // Still failed.
+            if (initialized == false) {
+                return;
+            }
+        }
+
         // Freq = 50Hz, Period = 20,000 us
         let pwm = pulseWidth * 4096 / 20000;
         setPWM(channel, pwm);
