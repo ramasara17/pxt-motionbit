@@ -63,14 +63,14 @@ enum MotionBitServoChannel {
 //% weight=10 color=#ff8000 icon="\uf085" block="MOTION:BIT"
 //% groups=['DC Motors', 'Servos', 'RGB LED']
 namespace motionbit {
-    // Flag to indicate whether the PCA9685 has been initialized.
-    let initialized = false;
-
     // PWM frequency.
     let pwmFreq = 50;
 
     // Initialize the PCA9685 with frequency 50Hz.
-    initialized = initPCA9685(pwmFreq);
+    initPCA9685(pwmFreq);
+
+    // Turn off all outputs.
+    clearAllOutputs();
 
 
 
@@ -236,15 +236,35 @@ namespace motionbit {
 
 
     /**
+     * I2C read 8-bit data from the register of PCA9685.
+     * Return the data.
+     * @param register Register address.
+     */
+    function i2cRead(register: number): number {
+        pins.i2cWriteNumber(PCA9685_I2C_ADDRESS, register, NumberFormat.UInt8LE, true);
+        return pins.i2cReadNumber(PCA9685_I2C_ADDRESS, NumberFormat.UInt8LE);
+    }
+
+
+
+    /**
+     * Turn off all outputs of PCA9685.
+     */
+    function clearAllOutputs(): void {
+        i2cWrite16(REG_ADD_ALL_LED_ON_L, 0x0000);
+        i2cWrite16(REG_ADD_ALL_LED_OFF_L, 0x1000);
+    }
+
+
+
+    /**
      * Initialize and reset the output of PCA9685.
-     * Return true if able to communicate with the PCA9685.
      * @param freq PWM frequency.
      */
-    function initPCA9685(freq: number): boolean {
-        // Try to read from the PCA9685.
-        // Return false if failed.
-        if (pins.i2cReadNumber(PCA9685_I2C_ADDRESS, NumberFormat.Int8LE) == 0) {
-            return false;
+    function initPCA9685(freq: number): void {
+        // Return if the PCA9685 is already initialized (Default prescale value = 30).
+        if (i2cRead(REG_ADD_PRESCALE) != 30) {
+            return;
         }
 
         // Enable Register Auto-Increment and go to sleep.
@@ -255,8 +275,7 @@ namespace motionbit {
         i2cWrite(REG_ADD_PRESCALE, prescale);
 
         // Turn off all outputs.
-        i2cWrite16(REG_ADD_ALL_LED_ON_L, 0x0000);
-        i2cWrite16(REG_ADD_ALL_LED_OFF_L, 0x1000);
+        clearAllOutputs();
 
         // Wake up.
         i2cWrite(REG_ADD_MODE1, 0x20);
@@ -267,7 +286,7 @@ namespace motionbit {
         // Restart.
         i2cWrite(REG_ADD_MODE1, 0xA0);
 
-        return true;
+        return;
     }
 
 
@@ -283,15 +302,9 @@ namespace motionbit {
             return;
         }
 
-        // Make sure the PCA9685 was initialized.
-        if (initialized == false) {
-            initialized = initPCA9685(pwmFreq);
-
-            // Still failed.
-            if (initialized == false) {
-                return;
-            }
-        }
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(pwmFreq);
 
         let regAdd = REG_ADD_LED0_ON_L + (channel * 4);
 
@@ -322,15 +335,9 @@ namespace motionbit {
      * @param pulseWidth Servo pulse width (0 or 500 - 2500us).
      */
     function setServoPulseWidth(channel: number, pulseWidth: number): void {
-        // Make sure the PCA9685 was initialized.
-        if (initialized == false) {
-            initialized = initPCA9685(pwmFreq);
-
-            // Still failed.
-            if (initialized == false) {
-                return;
-            }
-        }
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(pwmFreq);
 
         // Freq = 50Hz, Period = 20,000 us
         let pwm = pulseWidth * 4096 / 20000;
