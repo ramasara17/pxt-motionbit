@@ -16,6 +16,9 @@ const REG_ADD_ALL_LED_ON_L = 0xFA;
 const REG_ADD_ALL_LED_OFF_L = 0xFC;
 const REG_ADD_PRESCALE = 0xFE;
 
+// PWM frequency.
+const PWM_FREQ = 50;
+
 
 
 // Motor channel.
@@ -63,11 +66,6 @@ enum MotionBitServoChannel {
 //% weight=10 color=#ff8000 icon="\uf085" block="MOTION:BIT"
 //% groups=['DC Motors', 'Servos', 'RGB LED']
 namespace motionbit {
-    // PWM frequency.
-    let pwmFreq = 50;
-
-    // Initialize the PCA9685 with frequency 50Hz.
-    initPCA9685(pwmFreq);
 
     // Turn off all outputs.
     clearAllOutputs();
@@ -84,6 +82,10 @@ namespace motionbit {
     //% blockId=motionbit_brake_motor
     //% block="brake motor %motor"
     export function brakeMotor(motor: MotionBitMotorChannel): void {
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(PWM_FREQ);
+
         if (motor == MotionBitMotorChannel.All) {
             setPWM(MotionBitMotorChannel.M1, 0);
             setPWM(MotionBitMotorChannel.M1 + 1, 0);
@@ -115,6 +117,10 @@ namespace motionbit {
     export function runMotor(motor: MotionBitMotorChannel, direction: MotionBitMotorDirection, speed: number): void {
         speed = Math.constrain(speed, 0, 255);
         speed = Math.map(speed, 0, 255, 0, 4095);
+
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(PWM_FREQ);
 
         if (direction == MotionBitMotorDirection.Forward) {
             if (motor == MotionBitMotorChannel.All) {
@@ -159,6 +165,10 @@ namespace motionbit {
     //% blockId=motionbit_disable_servo
     //% block="disable servo %servo"
     export function disableServo(servo: MotionBitServoChannel): void {
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(PWM_FREQ);
+
         if (servo == MotionBitServoChannel.All) {
             setServoPulseWidth(MotionBitServoChannel.S1, 0);
             setServoPulseWidth(MotionBitServoChannel.S2, 0);
@@ -189,6 +199,11 @@ namespace motionbit {
     export function setServoPosition(servo: MotionBitServoChannel, position: number): void {
         position = Math.constrain(position, 0, 180);
         let pulseWidth = position * 2000 / 180 + 500;
+
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(PWM_FREQ);
+
         if (servo == MotionBitServoChannel.All) {
             setServoPulseWidth(MotionBitServoChannel.S1, pulseWidth);
             setServoPulseWidth(MotionBitServoChannel.S2, pulseWidth);
@@ -221,15 +236,18 @@ namespace motionbit {
 
 
     /**
-     * I2C write 16-bit data to the register of PCA9685.
+     * I2C write 2 x 16-bit data to the register of PCA9685.
      * @param register Register address.
-     * @param data Data to write.
+     * @param data1 First 16-bit data to write.
+     * @param data2 Second 16-bit data to write.
      */
-    function i2cWrite16(register: number, data: number): void {
-        let buffer = pins.createBuffer(3);
+    function i2cWrite16x2(register: number, data1: number, data2: number): void {
+        let buffer = pins.createBuffer(5);
         buffer[0] = register;
-        buffer[1] = data & 0xff;
-        buffer[2] = (data >> 8) & 0xff;
+        buffer[1] = data1 & 0xff;
+        buffer[2] = (data1 >> 8) & 0xff;
+        buffer[3] = data2 & 0xff;
+        buffer[4] = (data2 >> 8) & 0xff;
         pins.i2cWriteBuffer(PCA9685_I2C_ADDRESS, buffer);
     }
 
@@ -251,8 +269,11 @@ namespace motionbit {
      * Turn off all outputs of PCA9685.
      */
     function clearAllOutputs(): void {
-        i2cWrite16(REG_ADD_ALL_LED_ON_L, 0x0000);
-        i2cWrite16(REG_ADD_ALL_LED_OFF_L, 0x1000);
+        // Initialize the PCA9685 if it's not done yet.
+        // This helps if the power is turned off while microbit is connected to USB.
+        initPCA9685(PWM_FREQ);
+
+        i2cWrite16x2(REG_ADD_ALL_LED_ON_L, 0x0000, 0x1000);
     }
 
 
@@ -302,28 +323,21 @@ namespace motionbit {
             return;
         }
 
-        // Initialize the PCA9685 if it's not done yet.
-        // This helps if the power is turned off while microbit is connected to USB.
-        initPCA9685(pwmFreq);
-
         let regAdd = REG_ADD_LED0_ON_L + (channel * 4);
 
         // Always off.
-        if (pwm == 0) {
-            i2cWrite16(regAdd, 0x0000);
-            i2cWrite16(regAdd + 2, 0x1000);
+        if (pwm <= 0) {
+            i2cWrite16x2(regAdd, 0x0000, 0x1000);
         }
 
         // Always on.
-        else if (pwm == 4095) {
-            i2cWrite16(regAdd, 0x1000);
-            i2cWrite16(regAdd + 2, 0x0000);
+        else if (pwm >= 4095) {
+            i2cWrite16x2(regAdd, 0x1000, 0x0000);
         }
 
         // In between.
         else {
-            i2cWrite16(regAdd, 0x0000);
-            i2cWrite16(regAdd + 2, pwm);
+            i2cWrite16x2(regAdd, 0x0000, pwm);
         }
     }
 
@@ -335,12 +349,8 @@ namespace motionbit {
      * @param pulseWidth Servo pulse width (0 or 500 - 2500us).
      */
     function setServoPulseWidth(channel: number, pulseWidth: number): void {
-        // Initialize the PCA9685 if it's not done yet.
-        // This helps if the power is turned off while microbit is connected to USB.
-        initPCA9685(pwmFreq);
-
         // Freq = 50Hz, Period = 20,000 us
         let pwm = pulseWidth * 4096 / 20000;
         setPWM(channel, pwm);
-    }
+    }    
 }
