@@ -64,7 +64,7 @@ enum MotionBitServoChannel {
  * Blocks for MOTION:BIT.
  */
 //% weight=10 color=#ff8000 icon="\uf085" block="MOTION:BIT"
-//% groups=['DC Motors', 'Servos', 'RGB LED']
+//% groups=['DC Motors', 'Servos', 'RGB LED', 'External RGB LED']
 namespace motionbit {
 
     // Turn off all outputs.

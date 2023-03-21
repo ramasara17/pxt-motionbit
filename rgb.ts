@@ -151,7 +151,8 @@ namespace motionbit {
      * Set the length for external RGB pixels.
      * @param length Number of external RGB pixels. eg: 8
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
+    //% group="External RGB LED"
     //% weight=30
     //% blockGap=40
     //% blockId="motionbit_init_ext_rgb"
@@ -177,7 +178,8 @@ namespace motionbit {
     /**
      * Turn off all External RGB pixels.
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
+    //% group="External RGB LED"
     //% weight=29
     //% blockGap=8
     //% blockId="motionbit_clear_all_ext_rgb_pixels"
@@ -199,7 +201,8 @@ namespace motionbit {
      * Set the brightness of the external RGB pixels (0-255).
      * @param brightness Pixel brightness. eg: 25
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
+    //% group="External RGB LED"
     //% weight=28
     //% blockGap=40
     //% blockId="motionbit_set_ext_rgb_brightness"
@@ -223,7 +226,8 @@ namespace motionbit {
      * Show the same color on all external RGB pixels. 
      * @param color RGB color of the pixel. eg: 0xff0000
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
+    //% group="External RGB LED"
     //% weight=27
     //% blockGap=8
     //% blockId="motionbit_set_all_ext_rgb_pixels_color"
@@ -245,7 +249,8 @@ namespace motionbit {
      * @param pixel The pixel number we want to change the color.
      * @param color RGB color of the pixel. eg: 0xff0000
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
+    //% group="External RGB LED"
     //% weight=26
     //% blockGap=40
     //% blockId="motionbit_set_ext_rgb_pixel_color"
@@ -266,7 +271,8 @@ namespace motionbit {
      * Shift the color of external RGB pixels.
      * @param offset Number of pixels to shift. eg: 1
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
+    //% group="External RGB LED"
     //% weight=25
     //% blockGap=8
     //% blockId="motionbit_shift_ext_rgb_pixels"
@@ -313,7 +319,7 @@ namespace motionbit {
      * Rotate the color of RGB pixels(-3 to 3).
      * @param offset Number of pixels to rotate. eg: 1
      */
-    //% subcategory="External RGB LED"
+    //% advanced=true
     //% weight=24
     //% blockGap=40
     //% blockId="motionbit_rotate_ext_rgb_pixels"
