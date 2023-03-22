@@ -166,7 +166,8 @@ namespace motionbit {
         }
 
         // Create a Neo Pixel object for RGB LED.
-        extRgbLed = rgbLed.range(2, length);
+        extRgbLed = motionbit.create(RGB_LED_PIN, length + RGB_LED_LENGTH, MotionBitRgbMode.RGB);
+        extRgbLed = extRgbLed.range(2, length);
         extRgbLed.clear();
 
         // Reduce the default brightness.
