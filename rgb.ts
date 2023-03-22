@@ -28,6 +28,8 @@ namespace motionbit {
     let rgbLed = motionbit.create(RGB_LED_PIN, RGB_LED_LENGTH, MotionBitRgbMode.RGB);
     rgbLed.clear();
 
+    let rgbBrightness = 25;
+
     // Reduce the default brightness.
     rgbLed.setBrightness(25);
 
@@ -64,6 +66,7 @@ namespace motionbit {
     //% brightness.min=0 brightness.max=255
     export function setRgbBrightness(brightness: number): void {
         rgbLed.setBrightness(brightness);
+        rgbBrightness = brightness;
 
         // Restore the original color.
         for (let i = 0; i < RGB_LED_LENGTH; i++) {
@@ -167,13 +170,15 @@ namespace motionbit {
 
         // Create a Neo Pixel object for RGB LED.
         extRgbLed = motionbit.create(RGB_LED_PIN, length + RGB_LED_LENGTH, MotionBitRgbMode.RGB);
+        rgbLed = extRgbLed.range(0, RGB_LED_LENGTH);
         extRgbLed = extRgbLed.range(2, length);
         extRgbLed.clear();
 
         // Reduce the default brightness.
         extRgbLed.setBrightness(25);
 
-        // Restore the original color for onboard RGB.
+        // Restore the original color and brightness for onboard RGB.
+        rgbLed.setBrightness(rgbBrightness);
         for (let i = 0; i < RGB_LED_LENGTH; i++) {
             rgbLed.setPixelColor(i, colorsArray[i]);
         }
