@@ -172,6 +172,14 @@ namespace motionbit {
 
         // Reduce the default brightness.
         extRgbLed.setBrightness(25);
+
+        // Restore the original color for onboard RGB.
+        for (let i = 0; i < RGB_LED_LENGTH; i++) {
+            rgbLed.setPixelColor(i, colorsArray[i]);
+        }
+        rgbLed.show();
+        basic.pause(0);
+
     }
 
 
