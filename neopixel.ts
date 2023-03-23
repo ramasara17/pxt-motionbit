@@ -93,8 +93,9 @@ namespace motionbit {
          * Shows a rainbow pattern on all LEDs.
          * @param startHue the start hue value for the rainbow, eg: 1
          * @param endHue the end hue value for the rainbow, eg: 360
+         * @param pixelsColor the array to store the color for each pixel.
          */
-        showRainbow(startHue: number = 1, endHue: number = 360) {
+        showRainbow(startHue: number = 1, endHue: number = 360, pixelsColor: number[] = null) {
             if (this._length <= 0) return;
 
             startHue = startHue >> 0;
@@ -138,15 +139,19 @@ namespace motionbit {
             //interpolate
             if (steps === 1) {
                 this.setPixelColor(0, hsl(h1 + hStep, s1 + sStep, l1 + lStep))
+                if (pixelsColor != null) pixelsColor[0] = hsl(h1 + hStep, s1 + sStep, l1 + lStep);
             } else {
                 this.setPixelColor(0, hsl(startHue, saturation, luminance));
+                if (pixelsColor != null) pixelsColor[0] = hsl(startHue, saturation, luminance);
                 for (let i = 1; i < steps - 1; i++) {
                     const h = Math.idiv((h1_100 + i * hStep), 100) + 360;
                     const s = Math.idiv((s1_100 + i * sStep), 100);
                     const l = Math.idiv((l1_100 + i * lStep), 100);
                     this.setPixelColor(i, hsl(h, s, l));
+                    if (pixelsColor != null) pixelsColor[i] = hsl(h, s, l);
                 }
                 this.setPixelColor(steps - 1, hsl(endHue, saturation, luminance));
+                if (pixelsColor != null) pixelsColor[steps - 1] = hsl(endHue, saturation, luminance);
             }
             this.show();
         }

@@ -266,7 +266,7 @@ namespace motionbit {
     //% advanced=true
     //% group="External RGB LED"
     //% weight=26
-    //% blockGap=40
+    //% blockGap=8
     //% blockId="motionbit_set_ext_rgb_pixel_color"
     //% block="set external RGB pixel %pixel to %color"
     //% color.shadow="colorNumberPicker"
@@ -280,6 +280,27 @@ namespace motionbit {
     }
 
 
+    /**
+     * Show a rainbow pattern on all external RGB pixels.
+     * @param startHue the start hue value for the rainbow, eg: 1
+     * @param endHue the end hue value for the rainbow, eg: 360
+     */
+    //% advanced=true
+    //% group="External RGB LED"
+    //% weight=25
+    //% blockGap=40
+    //% blockId="motionbit_set_all_ext_rgb_pixels_rainbow"
+    //% block="show rainbow on external RGB pixels with hue from %startHue to %endHue"
+    //% startHue.min=1 startHue.max=360
+    //% endHue.min=1 endHue.max=360
+    export function setAllExternalRgbPixelsRainbow(startHue: number = 1, endHue: number = 360): void {
+        if (extRgbLed == null) return;
+
+        extRgbLed.showRainbow(startHue, endHue, extColorsArray);
+        basic.pause(0);
+    }
+
+
 
     /**
      * Shift the color of external RGB pixels.
@@ -287,7 +308,7 @@ namespace motionbit {
      */
     //% advanced=true
     //% group="External RGB LED"
-    //% weight=25
+    //% weight=24
     //% blockGap=8
     //% blockId="motionbit_shift_ext_rgb_pixels"
     //% block="shift external RGB pixels color by %offset"
@@ -334,7 +355,7 @@ namespace motionbit {
      * @param offset Number of pixels to rotate. eg: 1
      */
     //% advanced=true
-    //% weight=24
+    //% weight=23
     //% blockGap=40
     //% blockId="motionbit_rotate_ext_rgb_pixels"
     //% block="rotate external RGB pixels color by %offset"
