@@ -37,6 +37,7 @@ enum MotionBitMotorChannel {
     S6 = 14,
     S7 = 13,
     S8 = 12,
+    S8 = 20,
 
     //% block="all"
     All = 1000,
