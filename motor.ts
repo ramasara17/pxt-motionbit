@@ -206,28 +206,49 @@ namespace motionbit {
     //% blockId=motionbit_set_servo_position
     //% block="set servo %servo position to %position degrees"
     //% position.min=0 position.max=180
-    export function setServoPosition(servo: MotionBitServoChannel, position: number): void {
-        position = Math.constrain(position, 0, 180);
-        let pulseWidth = position * 2000 / 180 + 500;
+   /**
+ * Set the position for servo (0-255 value).
+ * @param servo Servo channel.
+ * @param position Servo position (0-255). eg: 128
+ */
+//% group="Servos"
+//% weight=17
+//% blockGap=40
+//% blockId=motionbit_set_servo_position
+//% block="set servo %servo position to %position"
+//% position.min=0 position.max=255
+export function setServoPosition(servo: MotionBitServoChannel, position: number): void {
+    position = Math.constrain(position, 0, 255);
+    let highSignal = 0;
+    let lowSignal = 0;
 
-        // Initialize the PCA9685 if it's not done yet.
-        // This helps if the power is turned off while microbit is connected to USB.
-        initPCA9685(PWM_FREQ);
-
-        if (servo == MotionBitServoChannel.All) {
-            setServoPulseWidth(MotionBitServoChannel.S1, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S2, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S3, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S4, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S5, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S6, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S7, pulseWidth);
-            setServoPulseWidth(MotionBitServoChannel.S8, pulseWidth);
-        }
-        else {
-            setServoPulseWidth(servo, pulseWidth);
-        }
+    if (position >= 128) {
+        highSignal = 255;
+        lowSignal = position - 128;
+    } else {
+        highSignal = position;
+        lowSignal = 0;
     }
+
+    // Initialize the PCA9685 if it's not done yet.
+    // This helps if the power is turned off while microbit is connected to USB.
+    initPCA9685(PWM_FREQ);
+
+    if (servo == MotionBitServoChannel.All) {
+        setPWM(MotionBitServoChannel.S1, highSignal);
+        setPWM(MotionBitServoChannel.S2, lowSignal);
+        setPWM(MotionBitServoChannel.S3, highSignal);
+        setPWM(MotionBitServoChannel.S4, lowSignal);
+        setPWM(MotionBitServoChannel.S5, highSignal);
+        setPWM(MotionBitServoChannel.S6, lowSignal);
+        setPWM(MotionBitServoChannel.S7, highSignal);
+        setPWM(MotionBitServoChannel.S8, lowSignal);
+    }
+    else {
+        setPWM(servo, highSignal);
+        setPWM(servo + 1, lowSignal);
+    }
+}
 
 
 
